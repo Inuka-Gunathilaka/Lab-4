@@ -4,20 +4,19 @@
 #include <ESPmDNS.h>
 #include <LiquidCrystal_I2C.h>
 
-const int WATERPUMP_PIN = 23;
-
 #define LED_BUILTIN 2
 #define ANALOG_IN 34
 #define OUTPUT_PIN 23
 #define TRIG_PIN 5
 #define ECHO_PIN 18
 #define BUZZER_PIN 32
+#define WATERPUMP_PIN 23
 
 long duration;
 long distance;
+
 float depth = 4095;
 float Minimum_Level = 1000;
-
 float Analog_Value = 0;
 
 static TaskHandle_t lcd_task = NULL;
@@ -129,19 +128,16 @@ void handleNotFound(){
 
 void Read_Data(void *parameter) {
   while (1) {
-    Analog_Value = analogRead(ANALOG_IN);
-    sensor1 = Analog_Value;
-    percentageWaterLevel = (sensor1 / depth) * 100;
-    // delay(5);
-    // digitalWrite(TRIG_PIN, LOW);
-    // vTaskDelay(2 / portTICK_PERIOD_MS);
-    // digitalWrite(TRIG_PIN, HIGH);
-    // vTaskDelay(10 / portTICK_PERIOD_MS);
-    // digitalWrite(TRIG_PIN, LOW);
-    // duration = pulseIn(ECHO_PIN, HIGH);
-    // distance = duration * 0.034 / 2;
-    // sensor1 = distance;
-    // percentageWaterLevel = int(distance / depth) * 100;
+    delay(5);
+    digitalWrite(TRIG_PIN, LOW);
+    vTaskDelay(2 / portTICK_PERIOD_MS);
+    digitalWrite(TRIG_PIN, HIGH);
+    vTaskDelay(10 / portTICK_PERIOD_MS);
+    digitalWrite(TRIG_PIN, LOW);
+    duration = pulseIn(ECHO_PIN, HIGH);
+    distance = duration * 0.034 / 2;
+    sensor1 = distance;
+    percentageWaterLevel = int(distance / depth) * 100;
      vTaskDelay(200 / portTICK_PERIOD_MS);
   }
 }
